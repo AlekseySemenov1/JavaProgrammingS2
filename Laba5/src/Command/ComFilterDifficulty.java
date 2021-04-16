@@ -18,7 +18,11 @@ public class ComFilterDifficulty extends CommandAbstract {
 
     @Override
     public void execute(String args) {
-        Difficulty diff = Difficulty.valueOf(args.toUpperCase());
-        colMan.filterDiff(diff);
+        try {
+            Difficulty diff = Difficulty.valueOf(args.toUpperCase());
+            colMan.filterDiff(diff);
+        } catch (IllegalArgumentException e){
+            System.out.println("Неправильное значение поля");
+        }
     }
 }
