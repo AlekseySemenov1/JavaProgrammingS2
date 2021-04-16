@@ -17,8 +17,12 @@ public class ComRemoveById extends CommandAbstract {
 
     @Override
     public void execute(String args) {
-        long id = Long.parseLong(args);
-        colMan.removeById(id);
-        System.out.println("Элемент удален");
+        try {
+            long id = Long.parseLong(args);
+            colMan.removeById(id);
+            System.out.println("Элемент удален");
+        } catch (NumberFormatException e){
+            System.out.println("Неверный формат id");
+        }
     }
 }
