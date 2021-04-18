@@ -10,7 +10,10 @@ import java.time.ZonedDateTime;
 public class Main {
     public static void main(String[] args) {
         ParametrsInput parametrsInput = new ParametrsInput();
-        CollectionLoader collectionLoader = new CollectionLoader();
+        String inputfile = null;
+        if (args.length == 0) inputfile = "inputlaba5";
+        else inputfile = args[0];
+        CollectionLoader collectionLoader = new CollectionLoader(inputfile);
         CollectionManager colMan= new CollectionManager(ZonedDateTime.now(), collectionLoader);
         CommandInvoker commandInvoker = new CommandInvoker(
                 new ComAdd(colMan, parametrsInput),
