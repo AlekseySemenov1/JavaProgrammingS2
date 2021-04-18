@@ -11,16 +11,21 @@ import java.util.Scanner;
  * и сохранения коллекции в файл.
  */
 public class CollectionLoader {
-
-    /**
+    String enV = null;
+    
+    public CollectionLoader(String enV) {
+        this.enV = enV;
+    }
+    
+   /**
      * Метод для загрузки из файла.
-     * Файл для загрузки: inputlaba5
-     * @return collection
+     * enV - переменная окружения.
+     * @return коллекция из файла
      */
     public LinkedList<LabWork> readCol() {
         LinkedList<LabWork> collection = new LinkedList<>();
         try {
-            Scanner scanner = new Scanner(new FileReader(System.getenv("inputlaba5")));
+            Scanner scanner = new Scanner(new FileReader(System.getenv(enV)));
             CSVParser csvParser = new CSVParser(collection);
             while (scanner.hasNextLine()) {
                 csvParser.parse(scanner.nextLine());
@@ -37,12 +42,13 @@ public class CollectionLoader {
 
     /**
      * Метод для сохранения коллекции в файл.
-     * Файл для сохранения outlaba5
-     * @param col коллекция для записи
+     * @param col - коллекция для сохранения
+     * @param enVO - переменная окружения
      */
-    public void writeCol(LinkedList<LabWork> col) {
+    public void writeCol(LinkedList<LabWork> col, String enVO) {
         try {
-            BufferedOutputStream bOS = new BufferedOutputStream(new FileOutputStream(System.getenv("outlaba5")));
+            if (enVO.equals("")) enVO = "outlaba5";
+            BufferedOutputStream bOS = new BufferedOutputStream(new FileOutputStream(System.getenv(enVO)));
             for (LabWork laba : col) {
                 String q = laba.strParse();
                 bOS.write(q.getBytes());
