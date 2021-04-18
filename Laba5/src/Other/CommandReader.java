@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class CommandReader {
     private CommandInvoker cominv;
     private ParametrsInput pI;
+    private ArrayList<String> fileList = new ArrayList<>();
 
     public CommandReader(CommandInvoker cominv, ParametrsInput pI) {
         this.cominv = cominv;
@@ -47,6 +48,9 @@ public class CommandReader {
      */
     public void scriptinput(String script) {
         try {
+            for (String scriptname: fileList)
+                if (script.equals(scriptname)) throw new RecursionException();
+            fileList.add(script);
             Scanner scanner = new Scanner(new FileReader(script));
             while (scanner.hasNextLine()) {
                 String[] a;
@@ -66,6 +70,7 @@ public class CommandReader {
         } catch (IllegalStateException e){
             System.out.println("Ошибка");
         }
+        fileList.remove(script);
     }
 
     /**
