@@ -12,11 +12,6 @@ import javax.naming.NoPermissionException;
  * и сохранения коллекции в файл.
  */
 public class CollectionLoader {
-    String enV = null;
-    
-    public CollectionLoader(String enV) {
-        this.enV = enV;
-    }
     
    /**
      * Метод для загрузки из файла.
@@ -26,7 +21,7 @@ public class CollectionLoader {
     public LinkedList<LabWork> readCol() {
         LinkedList<LabWork> collection = new LinkedList<>();
         try {
-            File file = new File(System.getenv(enV));
+            File file = new File(System.getenv("enV"));
             if (!file.canRead()&& file.exists()) throw new NoPermissionException();
             Scanner scanner = new Scanner(new FileReader(file));
             CSVParser csvParser = new CSVParser(collection);
@@ -52,7 +47,7 @@ public class CollectionLoader {
      */
     public void writeCol(LinkedList<LabWork> col, String enVO) {
         try {
-            if (enVO.equals("")) enVO = "outlaba5";
+            if (enVO.equals("")) enVO = "enV";
             File file = new File(System.getenv(enVO));
             if (!file.canWrite()&& file.exists()) throw new NoPermissionException();
             BufferedOutputStream bOS = new BufferedOutputStream(new FileOutputStream(file));
