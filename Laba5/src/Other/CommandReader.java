@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import javax.naming.NoPermissionException;
 
 /**
  * Класс для ввода и обработки команд
