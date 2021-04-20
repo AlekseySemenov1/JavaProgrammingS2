@@ -5,6 +5,7 @@ import CollectionElements.LabWork;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.Scanner;
+import javax.naming.NoPermissionException;
 
 /**
  * Класс для загрузки коллекции из файла
