@@ -19,10 +19,11 @@ public class ComRemoveById extends CommandAbstract {
     public void execute(String args) {
         try {
             long id = Long.parseLong(args);
-            colMan.removeById(id);
+            if(!colMan.removeById(id)) throw new NullPointerException();
             System.out.println("Элемент удален");
         } catch (NumberFormatException e){
             System.out.println("Неверный формат id");
+        } catch (NullPointerException e){
+            System.out.println("Элемент с таким id не найден");
         }
-    }
 }
