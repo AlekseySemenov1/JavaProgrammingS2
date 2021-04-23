@@ -19,10 +19,13 @@ public class ComFilterDifficulty extends CommandAbstract {
     @Override
     public void execute(String args) {
         try {
+            if (colMan.getLabCol().isEmpty()) throw new NullPointerException();
             Difficulty diff = Difficulty.valueOf(args.toUpperCase());
             colMan.filterDiff(diff);
         } catch (IllegalArgumentException e){
             System.out.println("Неправильное значение поля");
+        } catch (NullPointerException e){
+            System.out.println("Коллекция пуста");
         }
     }
 }
