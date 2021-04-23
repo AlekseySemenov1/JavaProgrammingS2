@@ -16,7 +16,12 @@ public class ComFieldDifficulty extends CommandAbstract {
 
     @Override
     public void execute(String args) {
-        colMan.printFieldDifficulty();
-        System.out.println();
+        try {
+            if (colMan.getLabCol().isEmpty()) throw new NullPointerException();
+            colMan.printFieldDifficulty();
+            System.out.println();
+        } catch (NullPointerException e){
+            System.out.println("Коллекция пуста");
+        }
     }
 }
