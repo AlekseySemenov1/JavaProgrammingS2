@@ -74,10 +74,10 @@ public class CommandInvoker {
      * Выводит историю команд
      */
     public void showHistory() {
+        addToHistory(comHistory.getName());
         System.out.println("Последние введенные команды:");
         for (String q : history)
             System.out.println(q);
-        addToHistory(comHelp.getName());
     }
 
     /**
