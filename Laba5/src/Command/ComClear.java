@@ -15,7 +15,12 @@ public class ComClear extends CommandAbstract{
 
     @Override
     public void execute(String args) {
-        colMan.colClear();
-        System.out.println("Коллекция очищенна\n");
+        try {
+            if (colMan.getLabCol().isEmpty()) throw new NullPointerException();
+            colMan.colClear();
+            System.out.println("Коллекция очищенна\n");
+        } catch (NullPointerException e){
+            System.out.println("Коллекция пуста");
+        }
     }
 }
