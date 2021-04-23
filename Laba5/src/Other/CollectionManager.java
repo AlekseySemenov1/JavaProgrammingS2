@@ -116,12 +116,17 @@ public class CollectionManager {
      * Удаляет элемент коллекции по id
      * @param id заданное id
      */
-    public void removeById(Long id) {
+   public boolean removeById(Long id) {
+        boolean q = false;
         for (LabWork laba : labCol) {
-            if (laba.getId() == id)
+            if (laba.getId() == id) {
                 labCol.remove(laba);
+                q = true;
+            }
         }
+        return q;
     }
+    
     public int countLessDiscipline(Discipline discipline) {
         int count = 0;
         for (LabWork laba : labCol) {
