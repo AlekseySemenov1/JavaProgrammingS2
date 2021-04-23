@@ -25,7 +25,7 @@ public class ComUpdateById extends CommandAbstract {
         try {
             if (args.isEmpty()) throw new EmptyInputException();
             long id = Long.parseLong(args);
-            colMan.removeById(id);
+            if (!colMan.removeById(id)) throw new NullPointerException();
             colMan.addNewElement(new LabWork(
                     id,
                     pI.inputName(),
@@ -42,6 +42,8 @@ public class ComUpdateById extends CommandAbstract {
             System.out.println("Вводимый параметр должен быть числом");
         } catch (EmptyInputException e) {
             System.out.println("Ввод пустой строки");
+        } catch (NullPointerException e){
+            System.out.println("Элемент с таким id не найден");
         }
     }
 }
