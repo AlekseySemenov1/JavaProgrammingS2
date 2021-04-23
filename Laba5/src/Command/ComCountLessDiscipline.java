@@ -20,7 +20,12 @@ public class ComCountLessDiscipline extends CommandAbstract {
 
     @Override
     public void execute(String args) {
-        Discipline discipline = new Discipline(pI.inputDisciplineName(), pI.inputPracticeHours(), pI.inputSelfStudyHours());
-        System.out.println("Кол-во элементов: " + colMan.countLessDiscipline(discipline) + "\n");
+        try {
+            if (colMan.getLabCol().isEmpty()) throw new NullPointerException();
+            Discipline discipline = new Discipline(pI.inputDisciplineName(), pI.inputPracticeHours(), pI.inputSelfStudyHours());
+            System.out.println("Кол-во элементов: " + colMan.countLessDiscipline(discipline) + "\n");
+        } catch (NullPointerException e){
+            System.out.println("Коллекция пуста");
+        }
     }
 }
