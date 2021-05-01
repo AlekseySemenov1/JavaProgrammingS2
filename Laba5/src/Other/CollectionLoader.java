@@ -12,28 +12,33 @@ import javax.naming.NoPermissionException;
  * и сохранения коллекции в файл.
  */
 public class CollectionLoader {
-    
-   /**
+    private File file;
+    private Scanner scanner;
+    private CSVParser csvParser;
+    private LinkedList<LabWork> collection = new LinkedList<>();
+    /**
      * Метод для загрузки из файла.
      * enV - переменная окружения.
+     *
      * @return коллекция из файла
      */
     public LinkedList<LabWork> readCol() {
-        LinkedList<LabWork> collection = new LinkedList<>();
         try {
-            File file = new File(System.getenv("enV"));
-            if (!file.canRead()&& file.exists()) throw new NoPermissionException();
-            Scanner scanner = new Scanner(new FileReader(file));
-            CSVParser csvParser = new CSVParser(collection);
+            file = new File(System.getenv("enV"));
+            if (!file.canRead() && file.exists()) throw new NoPermissionException();
+            scanner = new Scanner(new FileReader(file));
+            csvParser = new CSVParser(collection);
             while (scanner.hasNextLine()) {
                 csvParser.parse(scanner.nextLine());
             }
-            System.out.println("Коллекция успешно добавлена");
+            System.out.println("Коллекция добавлена");
             return collection;
         } catch (FileNotFoundException e) {
             System.out.println("Не удалось найти файл");
-        } catch (NullPointerException e){
-            System.out.println("Неправильное имя файла");
+            readFromFullPath();
+        } catch (NullPointerException e) {
+            System.out.println("Несуществующая переменная окружения");
+            readFromFullPath();
         } catch (NoPermissionException e) {
             System.out.println("Нет прав на чтение файла");
         }
@@ -42,15 +47,16 @@ public class CollectionLoader {
 
     /**
      * Метод для сохранения коллекции в файл.
-     * @param col - коллекция для сохранения
+     *
+     * @param col  - коллекция для сохранения
      * @param enVO - переменная окружения
      */
     public void writeCol(LinkedList<LabWork> col, String enVO) {
         try {
             if (enVO.equals("")) enVO = "enV";
-            File file = new File(System.getenv(enVO));
-            if (!file.canWrite()&& file.exists()) throw new NoPermissionException();
-            BufferedOutputStream bOS = new BufferedOutputStream(new FileOutputStream(file));
+            File file1 = new File(System.getenv(enVO));
+            if (!file1.canWrite() && file1.exists()) throw new NoPermissionException();
+            BufferedOutputStream bOS = new BufferedOutputStream(new FileOutputStream(file1));
             for (LabWork laba : col) {
                 String q = laba.strParse();
                 bOS.write(q.getBytes());
@@ -59,12 +65,40 @@ public class CollectionLoader {
             System.out.println("Коллекция сохранена");
         } catch (FileNotFoundException e) {
             System.out.println("Не удалось найти файл");
-        } catch (NullPointerException e){
-            System.out.println("Неверное имя файла");
+        } catch (NullPointerException e) {
+            System.out.println("Несуществующая переменная окружения, введите команду save в формате: save pathname\nгде pathname - переменная окружения выходного файла");
         } catch (IOException e) {
             System.out.println("Ошибка");
         } catch (NoPermissionException e) {
             System.out.println("Нет прав на запись в файл");
+        }
+    }
+
+    public LinkedList<LabWork> readFromFullPath() {
+        while (true) {
+            try {
+                System.out.println("Введите полный путь к файлу");
+                scanner = new Scanner(System.in);
+                file = new File(scanner.nextLine());
+                if (!file.exists()) throw new FileNotFoundException();
+                if (!file.canRead()) throw new NoPermissionException();
+                csvParser = new CSVParser(collection);
+                scanner = new Scanner(file);
+                while (scanner.hasNextLine()) {
+                    csvParser.parse(scanner.nextLine());
+                }
+                System.out.println("Коллекция добавлена");
+                return collection;
+            } catch (IllegalStateException e) {
+                System.out.println("Ошибка");
+            } catch (NoSuchElementException e) {
+                System.out.println("Я упаль");
+                System.exit(0);
+            } catch (NoPermissionException e) {
+                System.out.println("Нет прав на чтение");
+            } catch (FileNotFoundException e) {
+                System.out.println("Файл не существует");
+            }
         }
     }
 }
