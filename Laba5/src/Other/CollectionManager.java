@@ -142,11 +142,13 @@ public class CollectionManager {
      * элементов в порядке убывания
      */
     public void printFieldDifficulty() {
-        labCol.sort(new Comparator<LabWork>() {
+        ArrayList<Difficulty> diff = new ArrayList<>();
+        for (LabWork laba: labCol){
+            diff.add(laba.getDifficulty());
+        }
+        diff.sort(new Comparator<Difficulty>() {
             @Override
-            public int compare(LabWork laba1, LabWork laba2) {
-                Difficulty o1 = laba1.getDifficulty();
-                Difficulty o2 = laba2.getDifficulty();
+            public int compare(Difficulty o1, Difficulty o2) {
                 int q1, q2;
                 if (o1.equals(Difficulty.TERRIBLE))
                     q1 = 2;
@@ -161,11 +163,11 @@ public class CollectionManager {
                 return q1 - q2;
             }
         });
-        for (LabWork laba: labCol){
-            System.out.println(laba.getDifficulty());
+        for (Difficulty d:diff){
+            System.out.println(d);
         }
     }
-
+    
     /**
      * Сохраняет коллекцию
      */
