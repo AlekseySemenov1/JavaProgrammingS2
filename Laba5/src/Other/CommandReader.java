@@ -49,10 +49,13 @@ public class CommandReader {
      */
     public void scriptinput(String script) {
         try {
+            if (script.equals("")) throw new EmptyInputException();
             for (String scriptname: fileList)
                 if (script.equals(scriptname)) throw new RecursionException();
             fileList.add(script);
-            Scanner scanner = new Scanner(new FileReader(script));
+            File file = new File(script);
+            if (!file.canExecute()&& file.exists()) throw new NoPermissionException();
+            Scanner scanner = new Scanner(new FileReader(file));
             while (scanner.hasNextLine()) {
                 String[] a;
                 System.out.println("Введите команду:");
@@ -60,7 +63,7 @@ public class CommandReader {
                 pI.setScanner(scanner);
                 a[0] = a[0].toLowerCase();
                 a[1] = a[1].trim();
-                System.out.println(a[0]);
+                System.out.println(a[0] + ' ' + a[1]);
                 executeCommand(a);
             }
         } catch (NoSuchElementException e) {
@@ -70,6 +73,12 @@ public class CommandReader {
             System.out.println("Файл не найден");
         } catch (IllegalStateException e){
             System.out.println("Ошибка");
+        } catch (RecursionException e) {
+            System.out.println("Alarm: Зациклились");
+        } catch (NoPermissionException e) {
+            System.out.println("Нет прав на выполнение файла");
+        } catch (EmptyInputException e) {
+            System.out.println("Пустой ввод");
         }
         fileList.remove(script);
     }
