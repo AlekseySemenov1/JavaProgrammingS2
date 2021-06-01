@@ -23,16 +23,29 @@ public class RequestReader {
         this.comReader = comReader;
     }
 
-    public void start(){
+    public void start() {
         try {
+            Selector selector = Selector.open();
+            SelectionKey keys = channel.register(selector, SelectionKey.OP_READ);
             channel.bind(address);
             while (true) {
                 try {
-                    SocketAddress address = channel.receive(byteBuffer);
-                    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(byteBuffer.array()));
-                    Request request = (Request) ois.readObject();
-                    byteBuffer.clear();
-                    comReader.executeCommand(request.getCommand(), request.getArg(), address);
+                    int readyChannels = selector.selectNow();
+                    if (readyChannels == 0) continue;
+                    Set selectedKeys = selector.selectedKeys();
+                    Iterator keyIterator = selectedKeys.iterator();
+                    while (keyIterator.hasNext()) {
+                        keyIterator.next();
+                        if (keys.isReadable()) {
+                            SocketAddress address = channel.receive(byteBuffer);
+                            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(byteBuffer.array()));
+                            Request request = (Request) ois.readObject();
+                            ois.close();
+                            byteBuffer.clear();
+                            comReader.executeCommand(request.getCommand(), request.getArg(), address);
+                        }
+                        keyIterator.remove();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
