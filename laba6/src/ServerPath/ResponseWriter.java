@@ -17,24 +17,30 @@ public class ResponseWriter {
         this.channel = channel;
     }
 
-    public void writeResponse(Response response, SocketAddress address){
+        public void writeResponse(Response response, SocketAddress address) {
         try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            Selector selector = Selector.open();
+            SelectionKey keys = channel.register(selector, SelectionKey.OP_WRITE);
+            int readyChannels = selector.selectNow();
+            if (readyChannels ==0) return;
+            Set selectedKeys = selector.selectedKeys();
+            if (keys.isWritable()) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
 
-            oos.writeObject(response);
-            byteBuffer.put(bos.toByteArray());
+                oos.writeObject(response);
+                byteBuffer.put(bos.toByteArray());
 
-            bos.flush();
-            oos.flush();
+                bos.flush();
+                oos.flush();
 
-            byteBuffer.flip();
-
-            channel.send(byteBuffer, address);
-            bos.close();
-            oos.close();
-            byteBuffer.clear();
-            channel.disconnect();
+                byteBuffer.flip();
+                channel.send(byteBuffer, address);
+                bos.close();
+                oos.close();
+                byteBuffer.clear();
+                channel.disconnect();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
