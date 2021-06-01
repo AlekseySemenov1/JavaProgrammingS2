@@ -20,7 +20,7 @@ public class RequestWriter {
         this.resReader = resReader;
     }
 
-    public void writeRequest(Request request) {
+    public boolean writeRequest(Request request) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -31,9 +31,10 @@ public class RequestWriter {
             socket.send(packet);
             bos.close();
             oos.close();
-            resReader.readResponse();
+            return resReader.readResponse();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 }
