@@ -16,19 +16,22 @@ public class ComUpdateById extends CommandAbstract {
         super("update_by_id", "обновить значение элемента коллекции, id которого равен заданному");
 
     }
-    @Override
+   
     public String execute(Object args, CollectionManager colMan) {
         try {
-            if (!colMan.removeById(((LabWork) args).getId())) throw new NullPointerException();
-            ((LabWork) args).setCreationDate(ZonedDateTime.now());
-            colMan.addNewElement((LabWork) args);
+            ((LabWork)args).setCreationDate(ZonedDateTime.now());
+            colMan.removeById(((LabWork)args).getId());
+            colMan.addNewElement((LabWork)args);
             return "Элемент успешно обновлен\n";
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException var4) {
             return "Вводимый параметр должен быть числом";
-        } catch (NullPointerException e){
-            return "Элемент с таким id не найден";
         }
     }
+
+    public boolean findElement(String args, CollectionManager colMan) {
+        return colMan.findElementById(Long.parseLong(args));
+    }
+
 
     public LabWork askArgs(String args, ParametrsInput pI){
         try {
