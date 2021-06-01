@@ -144,9 +144,11 @@ public class CommandReader {
                 break;
 
             case "update_by_id":
-                LabWork laba2 = ((ComUpdateById) commandsList.get(14)).askArgs(args[1], pI);
-                if (laba2 != null)
+                if (writer.writeRequest(new Request(commandsList.get(14), args[1])) == true) {
+                    LabWork laba2 = ((ComUpdateById) commandsList.get(14)).askArgs(args[1], pI);
+                    laba2.setId(Long.parseLong(args[1]));
                     writer.writeRequest(new Request(commandsList.get(14), laba2));
+                }
                 break;
 
             case "exit":
