@@ -26,6 +26,7 @@ public class Main {
 
         InetSocketAddress address = new InetSocketAddress(10070);
         DatagramChannel channel = DatagramChannel.open();
+        channel.configureBlocking(false);
 
         ResponseWriter resWriter = new ResponseWriter(channel);
         CommandReader comReader = new CommandReader(manager, commandsList, resWriter);
