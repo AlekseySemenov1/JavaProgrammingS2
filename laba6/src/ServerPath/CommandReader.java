@@ -101,9 +101,16 @@ public class CommandReader {
                 break;
 
             case "update_by_id":
-                message = commandsList.get(14).execute(args, manager);
-                resWriter.writeResponse(new Response(message), address);
-                ((ComHistory) commandsList.get(7)).addToHistory(com.getName());
+                if (args instanceof String) {
+                    if (((ComUpdateById) commandsList.get(14)).findElement((String) args, manager) == false)
+                        resWriter.writeResponse(new Response("Нет элемента с таким id"), address);
+                    else
+                        resWriter.writeResponse(new Response("Элемент с таким id найден"), address);
+                    ((ComHistory) commandsList.get(7)).addToHistory(com.getName());
+                } else if (args instanceof LabWork) {
+                    message = ((ComUpdateById) commandsList.get(14)).execute(args, manager);
+                    resWriter.writeResponse(new Response(message), address);
+                }
                 break;
 
             case "exit":
