@@ -13,11 +13,15 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CommandReader extends Thread {
+public class CommandReader implements Runnable {
     private CollectionManager manager;
     private ArrayList<Command> commandsList;
     private ResponseWriter resWriter;
     private DataBaseConnector connector;
+    private Command com;
+    private Object args;
+    private SocketAddress address;
+    private User user;
 
     public CommandReader(CollectionManager manager, ArrayList<Command> commandsList, ResponseWriter resWriter, DataBaseConnector connector) {
         this.manager = manager;
@@ -26,8 +30,16 @@ public class CommandReader extends Thread {
         this.connector = connector;
     }
 
+    @Override
+    public void run() {
+        try {
+            executeCommand();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-    public synchronized void executeCommand(Command com, Object args, SocketAddress address, User user) throws IOException {
+    public synchronized void executeCommand() throws IOException {
         try {
             String message;
             switch (com.getName()) {
@@ -140,5 +152,21 @@ public class CommandReader extends Thread {
             System.out.println("Произошла ошибка в бд, не удалось выполнить команду");
             e.printStackTrace();
         }
+    }
+
+    public void setCom(Command com) {
+        this.com = com;
+    }
+
+    public void setArgs(Object args) {
+        this.args = args;
+    }
+
+    public void setAddress(SocketAddress address) {
+        this.address = address;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
