@@ -57,7 +57,11 @@ public class RequestReader extends Thread{
                             ExecutorService service = Executors.newFixedThreadPool(2);
                             if (object instanceof Request) {
                                 Request request = (Request) object;
-                                comReader.executeCommand(request.getCommand(), request.getArg(), address, request.getUser());
+                                comReader.setCom(request.getCommand());
+                                comReader.setArgs(request.getArg());
+                                comReader.setAddress(address);
+                                comReader.setUser(request.getUser());
+                                service.submit(comReader);
                             } else if (object instanceof EnterRequest){
                                 EnterRequest request = (EnterRequest) object;
                                 authoManager.checkPassword(request.getUser().getLogin(), request.getUser().getPassword(), address);
