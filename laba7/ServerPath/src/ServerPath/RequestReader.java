@@ -56,12 +56,14 @@ public class RequestReader extends Thread{
                             byteBuffer.clear();
                             ExecutorService service = Executors.newFixedThreadPool(2);
                             if (object instanceof Request) {
-                                Request request = (Request) object;
+                                synchronized (comReader) {
+                                    Request request = (Request) object;
                                 comReader.setCom(request.getCommand());
                                 comReader.setArgs(request.getArg());
                                 comReader.setAddress(address);
                                 comReader.setUser(request.getUser());
                                 service.submit(comReader);
+                                }
                             } else if (object instanceof EnterRequest){
                                 EnterRequest request = (EnterRequest) object;
                                 authoManager.checkPassword(request.getUser().getLogin(), request.getUser().getPassword(), address);
