@@ -39,7 +39,7 @@ public class CommandReader implements Runnable {
         }
     }
 
-    public synchronized void executeCommand() throws IOException {
+    public void executeCommand() throws IOException {
         try {
             String message;
             switch (com.getName()) {
