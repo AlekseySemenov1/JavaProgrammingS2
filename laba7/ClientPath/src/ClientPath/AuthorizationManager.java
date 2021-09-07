@@ -9,6 +9,7 @@ import Messages.SaltRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class AuthorizationManager {
@@ -22,12 +23,16 @@ public class AuthorizationManager {
     }
 
     public void enter() {
-        while (true) {
-            System.out.println("Введите команду \"register\", чтобы зарегистрироваться, команду \"login\", чтобы войти или команду \"exit\", чтобы завершить работу приложения");
-            String a = scanner.next();
-            if (selectEnterType(a)) break;
+        try {
+            while (true) {
+                System.out.println("Введите команду \"register\", чтобы зарегистрироваться, команду \"login\", чтобы войти или команду \"exit\", чтобы завершить работу приложения");
+                String a = scanner.next();
+                if (selectEnterType(a)) break;
+            }
+            comReader.userinput();
+        } catch (NoSuchElementException e){
+            System.out.println("Я упал");
         }
-        comReader.userinput();
     }
 
     private boolean authorization() {
@@ -35,10 +40,10 @@ public class AuthorizationManager {
             while (writer.connectToServer() != 0) {
                 System.out.println("Введите логин");
                 String login = scanner.next().trim();
+                writer.writeSaltRequest(new SaltRequest(login));
                 System.out.println("Введите пароль");
                 String password = scanner.next().trim();
                 String pepper = "6n8oibq";
-                writer.writeSaltRequest(new SaltRequest(login));
                 String salt = writer.getSalt();
                 MessageDigest ms = MessageDigest.getInstance("MD5");
                 byte[] hash = ms.digest((pepper + password + salt).getBytes(StandardCharsets.UTF_8));
@@ -50,7 +55,7 @@ public class AuthorizationManager {
             }
             return false;
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            System.out.println("Критическая ошибка");
             return false;
         }
     }
@@ -82,7 +87,7 @@ public class AuthorizationManager {
             }
             return false;
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            System.out.println("Критическая ошибка");
             return false;
         }
     }
