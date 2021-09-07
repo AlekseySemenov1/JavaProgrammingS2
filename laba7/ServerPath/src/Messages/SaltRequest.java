@@ -1,8 +1,7 @@
 package Messages;
 
-import java.io.Serializable;
-
-public class SaltRequest implements Serializable {
+public class SaltRequest extends Request {
+    private static final long serialVersionUID = 567956794456L;
     private String login;
 
     public SaltRequest(String login) {

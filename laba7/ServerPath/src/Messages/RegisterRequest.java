@@ -2,9 +2,7 @@ package Messages;
 
 import CollectionElements.User;
 
-import java.io.Serializable;
-
-public class RegisterRequest implements Serializable {
+public class RegisterRequest extends Request {
     private static final long serialVersionUID = 3454675678689L;
     private User user;
 

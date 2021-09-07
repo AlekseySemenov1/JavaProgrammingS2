@@ -2,21 +2,20 @@ package Messages;
 
 import java.io.Serializable;
 
-public class Response implements Serializable {
-    private static final long serialVersionUID = 5432167548586556L;
+public abstract class Response implements Serializable {
     private String message;
-    private int executeStatus;
+    private int status;
 
-    public Response(String message, int executeStatus) {
+    public Response(String message, int status) {
         this.message = message;
-        this.executeStatus = executeStatus;
+        this.status = status;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public int getExecuteStatus() {
-        return executeStatus;
+    public int isStatus() {
+        return status;
     }
 }
